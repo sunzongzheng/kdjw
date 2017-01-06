@@ -27,7 +27,7 @@
                 <div class="am-modal-bd">
                     先手输吧～
                     <div class="verify_code">
-                        <input v-model="vcode" id="vcode"/><img v-on:click="getVerify" alt="从教务获取验证码">
+                        <input v-model="vcode" id="vcode" @keyup.13="login"/><img v-on:click="getVerify" alt="从教务获取验证码">
                     </div>
                 </div>
                 <div class="am-modal-footer">

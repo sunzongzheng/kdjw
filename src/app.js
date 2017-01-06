@@ -17,6 +17,13 @@ Vue.use(VueRouter)
 const router = new VueRouter({
     routes: CONFIG.routes
 })
+router.beforeEach((to, from, next) => {
+    next()
+})
+router.afterEach(route => {
+    layer.closeAll()
+})
+
 
 Vue.use(VueResource)
 //全局拦截器
@@ -36,7 +43,6 @@ Vue.http.interceptors.push((request, next) => {
     //请求
     next((response) => {
         if (response.data && response.data.indexOf("登录") > -1) {
-            $.AMUI.utils.cookie.unset("kdjw_ID")
             layer.closeAll()
             router.push("/login")
         }
@@ -68,7 +74,6 @@ const store = new Vuex.Store({
     mutations: {
         updateUser (state, newInfo) {
             state.user = $.extend(state.user, newInfo)
-            $.AMUI.utils.cookie.set("kdjw_ID", state.user.ID)
         },
         up(state, param){
             state.public = param

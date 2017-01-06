@@ -21,7 +21,7 @@ npm run build
 
 ###不知道如何开代理？
 
-[proxy.js](https://github.com/sunzongzheng/kdjw/proxy.js)
+[proxy.js](https://github.com/sunzongzheng/kdjw/blob/master/proxy.js)
 
 修改site_url为你的站点地址
 

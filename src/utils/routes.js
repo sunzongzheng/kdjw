@@ -2,7 +2,7 @@ export default {
     routes: [
         {
             path: '/',
-            component: require("../views/home/index.vue")
+            redirect: '/login'
         },
         {
             path: '/home',

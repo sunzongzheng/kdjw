@@ -8,8 +8,8 @@ export default{
     },
     data(){
         return {
-            ID: '1305030210',
-            password: '206834',
+            ID: '',
+            password: '',
             vcode: '',
             errorInfo: '',
             loadding_info: ''
@@ -30,6 +30,7 @@ export default{
             let self = this
             self.errorInfo = ''
             self.loadding_info = "正在登陆...."
+            $("#my-prompt").modal("close")
             $("#login_info").modal("open")
             this.$http.post('/kdjw/Logon.do?method=logon', {
                 useDogCode: '',
