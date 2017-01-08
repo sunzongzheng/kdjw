@@ -7,7 +7,7 @@
                 <thead>
                 <tr>
                     <th v-for="item in filterData.thead"
-                        :class="{courseName:item=='课程名称'}">{{item}}
+                        :class="{courseName:item=='课程名称',term:item=='开课学期'}">{{item}}
                     </th>
                 </tr>
                 </thead>

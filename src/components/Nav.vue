@@ -8,7 +8,7 @@
         <div class="am-topbar-right">
             <div class="am-dropdown" data-am-dropdown="{boundary: '.am-topbar'}">
                 <img class="am-circle am-dropdown-toggle avatar" data-am-dropdown-toggle height="35" width="35"
-                     :src="userInfo.avatar"/>
+                     :src="userInfo.avatar?(host+userInfo.avatar):''"/>
                 <ul class="am-dropdown-content">
                     <li><a disabled>修改个人信息</a></li>
                     <li><a disabled>修改密码</a></li>
@@ -65,7 +65,8 @@
         },
         data(){
             return {
-                avatar: ''
+                avatar: '',
+                host: CONFIG.host
             }
         },
         computed: {
