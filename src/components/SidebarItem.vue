@@ -57,7 +57,7 @@
         props: ['data'],
         data(){
             return {
-                isopen: false,
+                isopen: false
             }
         },
         mounted(){
@@ -73,6 +73,7 @@
                 if (this.data.sub && this.data.sub.length) {
                     return
                 } else if (this.data.isValid) {
+                    if ($(window).width() < 768)this.$store.commit("toggleSidebar", false)
                     this.$router.push(this.data.hash)
                 }
             }

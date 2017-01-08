@@ -33,6 +33,8 @@ export default {
         user.political = td[2].eq(3).html()
         //第四行
         user.mobile = td[3].eq(1).html()
+        //头像
+        user.avatar = $(dom).find(".xtable img").attr("src")
         console.log(user)
         return user
     }

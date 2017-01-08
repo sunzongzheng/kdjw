@@ -2,10 +2,13 @@
     <div class="result-panel">
         <breadcrumb :list="breadcrumb"></breadcrumb>
         <div id="table">
-            <table class="am-table am-table-hover am-table-compact">
+            <table class="am-table am-table-hover am-table-compact"
+                   :class="{PC:$store.state.isPC}">
                 <thead>
                 <tr>
-                    <th v-for="item in filterData.thead">{{item}}</th>
+                    <th v-for="item in filterData.thead"
+                        :class="{courseName:item=='课程名称'}">{{item}}
+                    </th>
                 </tr>
                 </thead>
                 <tbody>

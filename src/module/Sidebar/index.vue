@@ -1,8 +1,11 @@
 <template>
-    <ul class="siderbar">
-        <sidebarItem v-for="item in list" :data.sync="item">
-        </sidebarItem>
-    </ul>
+    <div class="sider" :class="{broad:$store.state.sidebar_status,normal:!$store.state.sidebar_status}">
+        <a class="am-icon-navicon" @click="close"></a>
+        <ul class="siderbar">
+            <sidebarItem v-for="item in list" :data.sync="item">
+            </sidebarItem>
+        </ul>
+    </div>
 </template>
 <style lang="less" src="./index.less" scoped></style>
 <script>
@@ -21,8 +24,8 @@
             }
         },
         methods: {
-            open (){
-
+            close (){
+                this.$store.commit("toggleSidebar", false)
             }
         }
     }

@@ -1,18 +1,14 @@
 <template>
     <header class="am-topbar am-topbar-inverse am-topbar-fixed-top"
+            :class="{broad:!$store.state.sidebar_status,normal:$store.state.sidebar_status}"
             v-show="$route.path!='/login'">
-        <h1 class="am-topbar-brand">
-            <router-link to="/home">教务网 - 非IE解决方案</router-link>
+        <h1 class="am-topbar-brand" v-if="!$store.state.sidebar_status">
+            <a class="am-icon-navicon" @click="open"></a>
         </h1>
-
-        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
-                data-am-collapse="{target: '#doc-topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span
-                class="am-icon-bars"></span></button>
-
         <div class="am-topbar-right">
             <div class="am-dropdown" data-am-dropdown="{boundary: '.am-topbar'}">
-                <button class="am-btn am-btn-default am-topbar-btn am-btn-sm am-dropdown-toggle"
-                        data-am-dropdown-toggle>其他 <span class="am-icon-caret-down"></span></button>
+                <img class="am-circle am-dropdown-toggle avatar" data-am-dropdown-toggle height="35" width="35"
+                     :src="userInfo.avatar"/>
                 <ul class="am-dropdown-content">
                     <li><a disabled>修改个人信息</a></li>
                     <li><a disabled>修改密码</a></li>
@@ -29,15 +25,35 @@
         margin-bottom: 0;
     }
 
-    .am-dropdown-content {
+    .am-topbar-brand {
+        img {
+            width: 35px;
+        }
+    }
 
-        a {
+    .am-topbar-right {
+        .avatar {
+            margin-top: 8px;
+            @height: 35px;
+            width: @height;
+            height: @height;
             cursor: pointer;
         }
+        .am-dropdown-content {
+            a {
+                cursor: pointer;
+            }
+        }
+    }
 
+    @media screen and(max-width: 767px) {
+        .am-topbar-right {
+            float: right;
+            margin-right: 6px;
+        }
     }
 </style>
-<script>
+<script type="text/ecmascript-6">
     import CONFIG from '../utils/config'
     import filter from '../filters/user'
     export default{
@@ -49,7 +65,12 @@
         },
         data(){
             return {
-                msg: 'hello vue'
+                avatar: ''
+            }
+        },
+        computed: {
+            userInfo(){
+                return this.$store.state.user
             }
         },
         methods: {
@@ -90,6 +111,10 @@
                 }).then((response)=> {
                     self.$router.push("/login")
                 })
+            },
+            open(){
+                console.log("open")
+                this.$store.commit("toggleSidebar", true)
             }
         },
         components: {}

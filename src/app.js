@@ -58,8 +58,11 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         user: {
-            ID: null
+            ID: null,
+            avatar: ''
         },
+        sidebar_status: $(window).width() > 767 ? true : false,
+        isPC: $(window).width() > 767 ? true : false,
         score: {
             inquiry_param: {}
         },
@@ -74,6 +77,12 @@ const store = new Vuex.Store({
     mutations: {
         updateUser (state, newInfo) {
             state.user = $.extend(state.user, newInfo)
+        },
+        toggleDevice(state, val){
+            state.isPC = val
+        },
+        toggleSidebar(state, val){
+            state.sidebar_status = val
         },
         up(state, param){
             state.public = param

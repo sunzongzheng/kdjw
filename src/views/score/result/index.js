@@ -19,8 +19,6 @@ export default{
             ],
             thead: [],
             tbody: [],
-            show_array: ["开课学期", "课程名称", "总成绩", "课程性质",
-                "课程类别", "学时", "学分", "考试性质"],
             curPage: 1,
             pageSize: 15
         }
@@ -29,6 +27,14 @@ export default{
     computed: {
         pageNum(){
             return Math.ceil(this.tbody.length / this.pageSize)
+        },
+        show_array(){
+            if (this.$store.state.isPC) {
+                return ["开课学期", "课程名称", "总成绩", "课程性质",
+                    "课程类别", "学时", "学分", "考试性质"]
+            } else {
+                return ["开课学期", "课程名称", "总成绩", "考试性质"]
+            }
         },
         filterData(){
             let self = this
