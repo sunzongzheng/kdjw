@@ -1,7 +1,8 @@
 <template>
     <ul class="am-pagination">
         <li :class="{'am-disabled':curPage<=1}" v-on:click="pre"><a>&laquo;</a></li>
-        <li v-for="(item,index) in pageNum" :class="{'am-active':curPage==index+1}"
+        <li v-for="(item,index) in pageNum"
+            :class="{'am-active':curPage==index+1}"
             v-on:click="jump(item)">
             <a>{{index+1}}</a>
         </li>

@@ -26,8 +26,8 @@
     }
 
     .am-topbar-brand {
-        img {
-            width: 35px;
+        .am-icon-navicon {
+            cursor: pointer;
         }
     }
 

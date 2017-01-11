@@ -8,11 +8,15 @@
             <img class="am-animation-slide-top" src="../../assets/image/vue-logo.png"/>
             <div class="am-form am-animation-slide-bottom login-panel">
                 <div class="am-form-group">
-                    <input type="number" id="doc-ipt-3" placeholder="学号" v-model="ID" v-focus>
+                    <input type="number" id="doc-ipt-3" placeholder="学号" v-model="ID"
+                           @keyup.13="showVerify"
+                           v-focus>
                 </div>
 
                 <div class="am-form-group">
-                    <input type="password" id="doc-ipt-pwd-2" placeholder="密码" v-model="password">
+                    <input type="password" id="doc-ipt-pwd-2" placeholder="密码"
+                           v-model="password"
+                           @keyup.13="showVerify">
                 </div>
                 <div class="am-form-group">
                     <button type="submit" class="am-btn am-btn-success am-u-sm-12" v-on:click="showVerify">登录

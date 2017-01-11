@@ -61,6 +61,16 @@ export default {
                     component: require("../views/evaluate/edit/index.vue")
                 }
             ]
+        },
+        {
+            path: "/course",
+            redirect: "/course/curriculum",
+            children: [
+                {
+                    path: "curriculum",
+                    component: require("../views/course/curriculum/index.vue")
+                }
+            ]
         }
     ]
 }

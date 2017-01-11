@@ -23,10 +23,13 @@ export default {
         },
         {
             title: '学生选课',
+            isValid: true,
+            hash: "/course",
             sub: [
                 {
                     title: '个人课表信息',
-                    hash: '/'
+                    hash: '/course/curriculum',
+                    isValid: true
                 },
                 {
                     title: '学生选课',

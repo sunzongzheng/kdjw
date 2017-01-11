@@ -7,7 +7,7 @@
 
 ## 部署相关：
 
-### 环境：Node.js
+### 环境：Node.js^6.9.1
 
 ### 步骤
 修改 /src/utils/config.js
@@ -21,7 +21,7 @@ npm run build
 
 ###不知道如何开代理？
 
-[proxy.js](https://github.com/sunzongzheng/kdjw/blob/master/proxy.js)
+参考方案：[proxy.js](https://github.com/sunzongzheng/kdjw/blob/master/proxy.js)
 
 修改site_url为你的站点地址
 

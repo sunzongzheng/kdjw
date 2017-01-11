@@ -1,31 +1,58 @@
 <template>
     <li>
-        <a v-on:click="go" :class="{disabled:!data.isValid}">{{data.title}}</a>
+        <a v-on:click="go" :class="{disabled:!data.isValid,active:isActive}">{{data.title}}</a>
         <ul v-show="isopen" class="sec-item-ul">
             <sidebarItem v-for="item in data.sub" :data.sync="item" class="sec-item">
             </sidebarItem>
         </ul>
-        <span class="iconfont" v-if="data.sub && data.sub.length" v-bind:class="{open:isopen}"
-              v-on:click="isopen=!isopen">&#xe6a6;</span>
+        <span class="iconfont" v-if="data.sub && data.sub.length" v-bind:class="{open:isopen}">&#xe6a6;</span>
     </li>
 </template>
 <style lang="less" scoped rel="stylesheet/less">
     a, li {
+        position: relative;
         color: #ffffff;
         display: block;
-        padding: 4px 0 0px 6px;
         font-size: 14px;
         user-select: none;
         cursor: pointer;
+    }
+
+    a {
+        padding: 8px 0 8px 12px;
+    }
+
+    .before {
+        position: absolute;
+        content: ' ';
+        background-color: #7cd67f;
+        width: 2px;
+        transition: all 0.3s;
+        left: 0;
+    }
+
+    a.active:before {
+        .before;
+        top: 20%;
+        height: 60%;
     }
 
     a.disabled {
         opacity: 0.6;
     }
 
-    li {
-        position: relative;
+    a:hover {
+        background-color: rgba(128, 128, 128, 0.49);
+    }
 
+    a.active:hover:before {
+        .before;
+        top: 0;
+        height: 100%
+    }
+
+    li {
+        padding: 0;
         ul {
             margin: 0px;
         }
@@ -33,12 +60,13 @@
         span.iconfont {
             position: absolute;
             right: 14px;
-            top: 10px;
+            top: 6px;
             transition: 0.3s ease;
             font-family: iconfont;
             font-weight: 800;
             font-size: 16px;
             font-style: normal;
+            z-index: -1;
             -webkit-font-smoothing: antialiased;
             -webkit-text-stroke-width: 0.2px;
             -moz-osx-font-smoothing: grayscale;
@@ -60,6 +88,11 @@
                 isopen: false
             }
         },
+        computed: {
+            isActive(){
+                return this.$route.path == this.data.hash
+            }
+        },
         mounted(){
             let self = this
             this.$nextTick(function () {
@@ -71,7 +104,7 @@
         methods: {
             go (){
                 if (this.data.sub && this.data.sub.length) {
-                    return
+                    this.isopen = !this.isopen
                 } else if (this.data.isValid) {
                     if ($(window).width() < 768)this.$store.commit("toggleSidebar", false)
                     this.$router.push(this.data.hash)
