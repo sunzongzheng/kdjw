@@ -16,9 +16,11 @@ export default{
         }
     },
     methods: {
+        //获取验证码
         getVerify (){
             $(".verify_code img").attr("src", CONFIG.host + '/kdjw/verifycode.servlet?' + Math.random())
         },
+        //弹出验证码输入框
         showVerify (){
             this.getVerify()
             this.vcode = ''
@@ -26,6 +28,70 @@ export default{
             $("#my-prompt").modal("open")
             $("#vcode").focus()
         },
+        //验证码识别
+        analysis_verify(){
+            let image = document.querySelector(".verify_code img");       //如果要用在greasemonkey脚本里,可以把下面的代码放在image的onload事件里
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext("2d");
+            let arr = {
+                "c": "000000000000000000000000000000000000000011110000000111111000001110011000001100000000001100000000001100000000001110011000000111110000000011110000",
+                "b": "001100000000001100000000001100000000001101110000001111111000001110011100001100001100001100001100001100001100001110011100001111111000001101110000",
+                "m": "000000000000000000000000000000000000001101110011001111111111001110011100001100011000001100011000001100011000001100011000001100011000001100011000",
+                "n": "000000000000000000000000000000000000001101111000001111111100001110001100001100001100001100001100001100001100001100001100001100001100001100001100",
+                "1": "000001100000000011100000000111100000001101100000001001100000000001100000000001100000000001100000000001100000000001100000000001100000000001100000",
+                "3": "000111110000001111111000011000011000000000011000000011110000000011110000000000111000000000011000011000011000011100111000001111110000000111100000",
+                "2": "000111100000001111110000011100011000011000011000000000011000000000110000000001110000000011100000000111000000001100000000011111111000011111111000",
+                "v": "000000000000000000000000000000000000001100011000001100011000001100011000000110110000000110110000000110110000000011100000000011100000000011100000",
+                "x": "000000000000000000000000000000000000001100011000001110111000000110110000000011100000000011100000000011100000000110110000001110111000001100011000",
+                "z": "000000000000000000000000000000000000001111111000001111111000000000110000000001110000000011100000000111000000000110000000001111111000001111111000"
+            }
+            let threshold = 127
+            let captcha = "";                         //存放识别后的验证码
+            canvas.width = image.width;
+            canvas.height = image.height;
+            document.body.appendChild(canvas);
+            ctx.drawImage(image, 0, 0);
+            let info = {
+                offsetWidth: 2,
+                offsetHeight: 4,
+                wordNum: 4,
+                wordWidth: 12,
+                wordHeight: 12,
+                wordSpace: -2
+            }
+            for (let i = 0; i < info.wordNum; i++) {
+                let beginX = info.offsetWidth + (info.wordWidth + info.wordSpace) * i,
+                    beginY = info.offsetHeight,
+                    endX = info.wordWidth,
+                    endY = info.wordHeight
+                //获取验证码单个字符的数据
+                let pixels = ctx.getImageData(beginX, beginY, endX, endY).data
+                //灰度字符串
+                var ldString = "";
+                for (let j = 0, length = pixels.length; j < length; j += 4) {
+                    ldString += pixels[j] > threshold ? '0' : '1';
+                }
+                //获取最大匹配的字符
+                let maxCommon = {
+                    key: "c",
+                    num: -1
+                };
+                Object.keys(arr).map(function (value) {
+                    let commons = ldString.split("").filter(function (v, index) {
+                        return arr[value][index] === v
+                    }).length
+                    if (commons > maxCommon.num) {
+                        maxCommon = {
+                            key: value,
+                            num: commons
+                        }
+                    }
+                });
+                captcha += maxCommon.key
+            }
+            this.vcode = captcha
+        },
+        //登录
         login (){
             let self = this
             self.errorInfo = ''

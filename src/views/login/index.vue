@@ -26,12 +26,13 @@
         </div>
         <div class="am-modal" tabindex="-1" id="my-prompt">
             <div class="am-modal-dialog">
-                <div class="am-modal-hd">程序猿还没有为你解决验证码
+                <div class="am-modal-hd">程序猿不敢保证验证码识别成功率
                     <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a></div>
                 <div class="am-modal-bd">
-                    先手输吧～
+                    检查一下把～
                     <div class="verify_code">
-                        <input v-model="vcode" id="vcode" @keyup.13="login"/><img v-on:click="getVerify" alt="从教务获取验证码">
+                        <input v-model="vcode" id="vcode" @keyup.13="login"/>
+                        <img v-on:click="getVerify" alt="从教务获取验证码" @load="analysis_verify">
                     </div>
                 </div>
                 <div class="am-modal-footer">
