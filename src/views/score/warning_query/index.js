@@ -1,19 +1,14 @@
-import pagination from '../../../components/pagination.vue'
-import breadcrumb from '../../../components/breadcrumb.vue'
+import pagination from 'components/pagination.vue'
+import breadcrumb from 'components/breadcrumb.vue'
 export default{
     created() {
-        this.params = this.$store.state.score.inquiry_param
         this.query()
     },
     data(){
         return {
             breadcrumb: [
                 {
-                    title: "查询选择",
-                    url: "./choose"
-                },
-                {
-                    title: "查询结果",
+                    title: "学生预警信息列表",
                     active: true
                 }
             ],
@@ -29,10 +24,9 @@ export default{
     computed: {
         show_array(){
             if (this.$store.state.isPC) {
-                return ["开课学期", "课程名称", "总成绩", "课程性质",
-                    "课程类别", "学时", "学分", "考试性质"]
+                return ["预警学期", "预警名称", "预警条件", "指标值", "实际值"]
             } else {
-                return ["开课学期", "课程名称", "总成绩"]
+                return ["预警名称", "预警条件", "指标值", "实际值"]
             }
         },
         filterData(){
@@ -77,7 +71,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            this.$http.get("/xszqcjglAction.do?method=queryxscj", {params: this.params}).then((response)=> {
+            this.$http.get("/xjyj.do?method=goXsyjxx").then((response)=> {
                 let thead = []
                 let tbody = []
                 $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {
@@ -91,8 +85,6 @@ export default{
                         if ($(this).html().indexOf("input") > -1)return
                         tr.entry.push($(this).html().trim().replace("&nbsp;", ""))
                     })
-                    if ($.inArray("重修", tr.entry) > -1)tr.type = "rebuilt"
-                    else tr.type = "normal"
                     tbody.push(tr)
                 })
                 self.thead = thead

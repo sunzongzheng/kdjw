@@ -1,4 +1,4 @@
-import breadcrumb from '../../../components/breadcrumb.vue'
+import breadcrumb from 'components/breadcrumb.vue'
 import API from '../../../utils/api'
 export default{
     created() {

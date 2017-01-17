@@ -2,6 +2,8 @@ export default {
     sidebar: [
         {
             title: '培养方案',
+            isValid: true,
+            hash: "/plan",
             sub: [
                 {
                     title: '培养方案总纲',
@@ -17,7 +19,8 @@ export default {
                 },
                 {
                     title: '教学计划',
-                    hash: '/'
+                    isValid: true,
+                    hash: '/plan/teaching_plan'
                 }
             ]
         },
@@ -80,7 +83,7 @@ export default {
             sub: [
                 {
                     title: '成绩查询',
-                    hash: '/score/inquiry',
+                    hash: '/score/result_inquiry/index',
                     isValid: true
                 },
                 {
@@ -89,7 +92,8 @@ export default {
                 },
                 {
                     title: '学籍预警查询',
-                    hash: '/'
+                    hash: '/score/warning_query',
+                    isValid: true
                 },
                 {
                     title: '学籍异动信息',
@@ -101,7 +105,8 @@ export default {
                 },
                 {
                     title: '学籍卡片',
-                    hash: '/'
+                    hash: '/score/card',
+                    isValid: true
                 },
                 {
                     title: '重修报名',
@@ -139,10 +144,12 @@ export default {
         },
         {
             title: '教材账户',
+            isValid: true,
             sub: [
                 {
                     title: '教材账目信息',
-                    hash: '/'
+                    hash: '/textbook_account',
+                    isValid: true
                 }
             ]
         }

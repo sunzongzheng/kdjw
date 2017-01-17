@@ -1,5 +1,5 @@
-import pagination from '../../../components/pagination.vue'
-import breadcrumb from '../../../components/breadcrumb.vue'
+import pagination from 'components/pagination.vue'
+import breadcrumb from 'components/breadcrumb.vue'
 export default{
     created() {
         let param = this.$store.state.exam.inquiry_param

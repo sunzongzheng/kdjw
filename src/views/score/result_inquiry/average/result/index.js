@@ -2,45 +2,37 @@ import pagination from 'components/pagination.vue'
 import breadcrumb from 'components/breadcrumb.vue'
 export default{
     created() {
-        let param = JSON.parse(JSON.stringify(this.$store.state.evaluate.inquiry_param))
-        console.log(param)
-        if (typeof param.xnxq === "undefined" || param.xnxq === ""
-            || param.pjpc === ""
-            || param.pjkc.length <= 0) {
-            this.$router.push("./choose")
-            return
-        }
-        let pjkc_array = JSON.parse(JSON.stringify(param.pjkc))
-        for (let i in pjkc_array) {
-            this.query($.extend(param, {
-                pjkc: pjkc_array[i]
-            }))
-        }
+        this.params = this.$store.state.score.inquiry_param
+        this.query()
     },
     data(){
         return {
             breadcrumb: [
                 {
-                    title: "查询条件",
+                    title: "查询选择",
                     url: "./choose"
                 },
                 {
-                    title: "课程列表",
+                    title: "查询结果",
                     active: true
                 }
             ],
             thead: [],
             tbody: [],
-            show_array: ["课程名称", "授课教师", "总评分",
-                "已评", "是否提交"],
             curPage: 1,
-            pageSize: 15
+            pageNum: 1,
+            pageSize: 15,
+            params: {}
         }
     },
     components: {pagination, breadcrumb},
     computed: {
-        pageNum(){
-            return Math.ceil(this.tbody.length / this.pageSize)
+        show_array(){
+            if (this.$store.state.isPC) {
+                return ["课程名称", "学分", "成绩", "对应绩点", "学分绩点"]
+            } else {
+                return ["课程名称", "学分", "成绩", "对应绩点", "学分绩点"]
+            }
         },
         filterData(){
             let self = this
@@ -63,27 +55,29 @@ export default{
                     })
                 }
             })
-            //分页
-            answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
+            if (self.$store.state.user.cadres) {
+                //分页
+                answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
+            }
             return answer
         }
     },
     methods: {
-        query(params){
+        query(){
             let self = this
             layer.open({
                 content: "正在获取数据",
                 type: 2,
                 shadeClose: false
             })
-            self.$http.post("/jxpjgl.do?method=queryJxpj&type=xs", params).then((response)=> {
+            this.$http.get("/xszqcjglAction.do?method=toXfjdList", {params: this.params}).then((response)=> {
                 let thead = []
                 let tbody = []
-                $(response._dom).find("#tblHead tbody th").each(function (i) {
+                $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {
                     let th = $(this).find("font").eq(1).html()
                     if (typeof th !== "undefined")thead.push(th)
                 })
-                $(response._dom).find("#mxh tbody tr").each(function () {
+                $(response._dom).find("#mxhDiv table tbody tr").each(function () {
                     let tr = {}
                     tr.entry = []
                     $(this).find("td").each(function (i) {
@@ -93,27 +87,40 @@ export default{
                     tbody.push(tr)
                 })
                 self.thead = thead
-                self.tbody = self.tbody.concat(tbody)
+                self.tbody = tbody
+                //本部 前端分页
+                if (this.$store.state.user.cadres) {
+                    self.pageNum = Math.ceil(self.tbody.length / self.pageSize)
+                } else {    //潇湘 后端分页
+                    self.pageSize = parseInt($(response._dom).find("input[name='printPageSize']").val())
+                    self.pageNum = parseInt($(response._dom).find("input[name='totalPages']").val())
+                }
                 layer.closeAll()
             })
         },
         next(){
-            this.curPage++
+            let self = this
+            self.curPage++
+            if (!self.$store.state.user.cadres) {
+                self.params = $.extend(self.params, {PageNum: self.curPage})
+                self.query()
+            }
         },
         pre(){
-            this.curPage--
+            let self = this
+            self.curPage--
+            if (!self.$store.state.user.cadres) {
+                self.params = $.extend(self.params, {PageNum: self.curPage})
+                self.query()
+            }
         },
         jump(page){
-            this.curPage = page
-        },
-        edit(index){
             let self = this
-            let str = self.tbody[index].entry[11].match(/w\/jxpjgl.do.*?'/)[0]
-            str = str.substring(1, str.length - 1).replace(/&amp;/g, "&")
-            self.$store.commit("up", {
-                url: str
-            })
-            self.$router.push("./edit")
+            this.curPage = page
+            if (!self.$store.state.user.cadres) {
+                self.params = $.extend(self.params, {PageNum: self.curPage})
+                self.query()
+            }
         }
     }
 }

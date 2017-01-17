@@ -11,17 +11,7 @@ import './assets/css/amazeui.min.css'
 import './assets/css/layer.css'
 import 'animate.css'
 import './assets/css/public.less'
-import App from './components/App'
-
-//animate css
-$.fn.extend({
-    animateCss: function (animationName) {
-        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-        this.addClass('animated ' + animationName).one(animationEnd, function () {
-            $(this).removeClass('animated ' + animationName);
-        });
-    }
-});
+import App from 'components/App'
 
 //路由
 Vue.use(VueRouter)
