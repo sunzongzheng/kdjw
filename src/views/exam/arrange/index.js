@@ -36,7 +36,7 @@ export default {
                 type: 2,
                 shadeClose: false
             })
-            self.$http.get("/kdjw/jiaowu/kwgl/kwgl_xsJgfb_soso.jsp").then((response)=> {
+            self.$http.get("/jiaowu/kwgl/kwgl_xsJgfb_soso.jsp").then((response)=> {
                 self.xnxq = $(response._dom).find("select[name='xnxqh']").html()
                 self.xqlb = $(response._dom).find("select[name='xqlb']").html()
                 self.kwmc = $(response._dom).find("select[name='kwmc']").html()

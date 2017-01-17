@@ -20,6 +20,8 @@
 
     a {
         padding: 8px 0 8px 12px;
+        background-color: rgba(128, 128, 128, 0);
+        transition: all 0.3s;
     }
 
     .before {
@@ -88,9 +90,13 @@
                 isopen: false
             }
         },
+        created(){
+            if (this.$route.path == this.data.hash)
+                this.$store.commit("toggleCur_col", this.data.title)
+        },
         computed: {
             isActive(){
-                return this.$route.path == this.data.hash
+                return (this.$store.state.cur_col == this.data.title && !this.data.sub)
             }
         },
         mounted(){
@@ -107,6 +113,7 @@
                     this.isopen = !this.isopen
                 } else if (this.data.isValid) {
                     if ($(window).width() < 768)this.$store.commit("toggleSidebar", false)
+                    this.$store.commit("toggleCur_col", this.data.title)
                     this.$router.push(this.data.hash)
                 }
             }

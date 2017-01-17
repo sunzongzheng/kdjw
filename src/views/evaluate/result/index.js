@@ -76,7 +76,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            self.$http.post("/kdjw/jxpjgl.do?method=queryJxpj&type=xs", params).then((response)=> {
+            self.$http.post("/jxpjgl.do?method=queryJxpj&type=xs", params).then((response)=> {
                 let thead = []
                 let tbody = []
                 $(response._dom).find("#tblHead tbody th").each(function (i) {
@@ -108,7 +108,7 @@ export default{
         },
         edit(index){
             let self = this
-            let str = self.tbody[index].entry[11].match(/'\/kdjw\/jxpjgl.do.*?'/)[0]
+            let str = self.tbody[index].entry[11].match(/w\/jxpjgl.do.*?'/)[0]
             str = str.substring(1, str.length - 1).replace(/&amp;/g, "&")
             self.$store.commit("up", {
                 url: str

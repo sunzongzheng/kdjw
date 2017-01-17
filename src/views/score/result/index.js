@@ -2,8 +2,8 @@ import pagination from '../../../components/pagination.vue'
 import breadcrumb from '../../../components/breadcrumb.vue'
 export default{
     created() {
-        let param = this.$store.state.score.inquiry_param
-        this.query(param)
+        this.params = this.$store.state.score.inquiry_param
+        this.query()
     },
     data(){
         return {
@@ -20,14 +20,13 @@ export default{
             thead: [],
             tbody: [],
             curPage: 1,
-            pageSize: 15
+            pageNum: 1,
+            pageSize: 15,
+            params: {}
         }
     },
     components: {pagination, breadcrumb},
     computed: {
-        pageNum(){
-            return Math.ceil(this.tbody.length / this.pageSize)
-        },
         show_array(){
             if (this.$store.state.isPC) {
                 return ["开课学期", "课程名称", "总成绩", "课程性质",
@@ -57,26 +56,28 @@ export default{
                     })
                 }
             })
-            //学期倒序
-            answer.tbody.sort(function (a, b) {
-                if (a.entry[0] > b.entry[0])return -1
-                else if (a.entry[0] == b.entry[0])return 0
-                else return 1
-            })
-            //分页
-            answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
+            if (self.$store.state.user.cadres) {
+                //学期倒序
+                answer.tbody.sort(function (a, b) {
+                    if (a.entry[0] > b.entry[0])return -1
+                    else if (a.entry[0] == b.entry[0])return 0
+                    else return 1
+                })
+                //分页
+                answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
+            }
             return answer
         }
     },
     methods: {
-        query(params){
+        query(){
             let self = this
             layer.open({
                 content: "正在获取数据",
                 type: 2,
                 shadeClose: false
             })
-            this.$http.get("/kdjw/xszqcjglAction.do?method=queryxscj", {params}).then((response)=> {
+            this.$http.get("/xszqcjglAction.do?method=queryxscj", {params: this.params}).then((response)=> {
                 let thead = []
                 let tbody = []
                 $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {
@@ -96,17 +97,39 @@ export default{
                 })
                 self.thead = thead
                 self.tbody = tbody
+                //本部 前端分页
+                if (this.$store.state.user.cadres) {
+                    self.pageNum = Math.ceil(self.tbody.length / self.pageSize)
+                } else {    //潇湘 后端分页
+                    self.pageSize = parseInt($(response._dom).find("input[name='printPageSize']").val())
+                    self.pageNum = parseInt($(response._dom).find("input[name='totalPages']").val())
+                }
                 layer.closeAll()
             })
         },
         next(){
-            this.curPage++
+            let self = this
+            self.curPage++
+            if (!self.$store.state.user.cadres) {
+                self.params = $.extend(self.params, {PageNum: self.curPage})
+                self.query()
+            }
         },
         pre(){
-            this.curPage--
+            let self = this
+            self.curPage--
+            if (!self.$store.state.user.cadres) {
+                self.params = $.extend(self.params, {PageNum: self.curPage})
+                self.query()
+            }
         },
         jump(page){
+            let self = this
             this.curPage = page
+            if (!self.$store.state.user.cadres) {
+                self.params = $.extend(self.params, {PageNum: self.curPage})
+                self.query()
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            this.$http.get("/kdjw/jiaowu/cjgl/xszq/query_xscj.jsp", {}).then((response)=> {
+            this.$http.get("/jiaowu/cjgl/xszq/query_xscj.jsp", {}).then((response)=> {
                 self.start = $(response._dom).find("#search_values select").eq(0).html()
                 self.nature = $(response._dom).find("#search_values select").eq(1).html()
                 self.mode = $(response._dom).find("#search_values select").eq(2).html()

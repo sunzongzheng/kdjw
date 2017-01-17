@@ -35,6 +35,8 @@ export default {
         user.mobile = td[3].eq(1).html()
         //头像
         user.avatar = $(dom).find(".xtable img").attr("src")
+        //本部 / 潇湘
+        user.cadres = parseInt(user.ID.charAt(2)) > 4 ? false : true
         console.log(user)
         return user
     }

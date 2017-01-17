@@ -73,7 +73,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            self.$http.post("/kdjw/kwsjglAction.do?method=sosoXsFb", params).then((response)=> {
+            self.$http.post("/kwsjglAction.do?method=sosoXsFb", params).then((response)=> {
                 let thead = []
                 let tbody = []
                 $(response._dom).find("#tblHead tbody th").each(function (i) {

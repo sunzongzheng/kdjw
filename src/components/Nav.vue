@@ -7,7 +7,8 @@
         </h1>
         <div class="am-topbar-right">
             <div class="am-dropdown" data-am-dropdown="{boundary: '.am-topbar'}">
-                <img class="am-circle am-dropdown-toggle avatar" data-am-dropdown-toggle height="35" width="35"
+                <img class="am-circle am-dropdown-toggle animated pulse avatar"
+                     data-am-dropdown-toggle height="35" width="35"
                      :src="userInfo.avatar?(host+userInfo.avatar):''"/>
                 <ul class="am-dropdown-content">
                     <li><a disabled>修改个人信息</a></li>
@@ -78,34 +79,41 @@
             //获取用户信息
             getUserInfo (){
                 let self = this
-                layer.open({
-                    content: "正在加载",
-                    type: 2,
-                    shadeClose: false
-                })
-                self.$http.get("/kdjw/xszhxxAction.do", {
+                self.$http.get("/xszhxxAction.do", {
                     params: {
                         method: "addStudentPic",
                         tktime: Date.parse(new Date())
-                    }
+                    },
+                    timeout: 2000
                 }).then((response)=> {
                     //已经登陆 则获取用户信息并跳转至Home
                     try {
                         //标题信息
                         let user = filter.getInfo(response._dom)
                         self.$store.commit('updateUser', user)
-                        console.log(self.$route.path)
                         if (self.$route.path == "/login")self.$router.push("/home")
                         else layer.closeAll()
                     } catch (e) {
                         self.$router.push("/login")
                     }
+                }, (response)=> {
+                    console.log(response)
+                    layer.open({
+                        content: "教务网异常...",
+                        skin: "msg",
+                        time: 2
+                    })
                 })
             },
             //注销
             logout (){
                 let self = this
-                this.$http.get("/kdjw/Logon.do", {
+                layer.open({
+                    content: "正在注销...",
+                    type: 2,
+                    shadeClose: true
+                })
+                this.$http.get("/Logon.do", {
                     params: {
                         method: "logout"
                     }
@@ -114,7 +122,6 @@
                 })
             },
             open(){
-                console.log("open")
                 this.$store.commit("toggleSidebar", true)
             }
         },

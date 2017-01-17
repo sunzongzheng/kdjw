@@ -5,8 +5,8 @@
                 <button type="button" class="am-close">&times;</button>
                 <p>{{errorInfo}}</p>
             </div>
-            <img class="am-animation-slide-top" src="../../assets/image/vue-logo.png"/>
-            <div class="am-form am-animation-slide-bottom login-panel">
+            <img class="animated flip" src="../../assets/image/vue-logo.png"/>
+            <div class="am-form animated fadeIn login-panel">
                 <div class="am-form-group">
                     <input type="number" id="doc-ipt-3" placeholder="学号" v-model="ID"
                            @keyup.13="showVerify"
@@ -19,7 +19,8 @@
                            @keyup.13="showVerify">
                 </div>
                 <div class="am-form-group">
-                    <button type="submit" class="am-btn am-btn-success am-u-sm-12" v-on:click="showVerify">登录
+                    <button type="submit" class="am-btn am-btn-success am-u-sm-12 animated rubberBand"
+                            v-on:click="showVerify">登录
                     </button>
                 </div>
             </div>

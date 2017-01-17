@@ -12,25 +12,32 @@ export default{
             password: '',
             vcode: '',
             errorInfo: '',
-            loadding_info: ''
+            loadding_info: '',
+            first_ident: true
         }
     },
     methods: {
         //获取验证码
         getVerify (){
-            $(".verify_code img").attr("src", CONFIG.host + '/kdjw/verifycode.servlet?' + Math.random())
+            $(".verify_code img").attr("src", CONFIG.host +
+                (parseInt(this.ID.toString().charAt(2)) < 5 ? '/kdjw' : '/xxjw') + '/verifycode.servlet?' + Math.random())
         },
         //弹出验证码输入框
         showVerify (){
-            this.getVerify()
             this.vcode = ''
+            this.getVerify()
             this.loadding_info = ''
-            $("#my-prompt").modal("open")
-            $("#vcode").focus()
+            if (!this.first_ident) {
+                $("#my-prompt").modal("open")
+                $("#vcode").focus()
+            } else {
+                this.loadding_info = "正在识别验证码...."
+                $("#login_info").modal("open")
+            }
         },
         //验证码识别
         analysis_verify(){
-            let image = document.querySelector(".verify_code img");       //如果要用在greasemonkey脚本里,可以把下面的代码放在image的onload事件里
+            let image = document.querySelector(".verify_code img");
             let canvas = document.createElement('canvas');
             let ctx = canvas.getContext("2d");
             let arr = {
@@ -45,12 +52,8 @@ export default{
                 "x": "000000000000000000000000000000000000001100011000001110111000000110110000000011100000000011100000000011100000000110110000001110111000001100011000",
                 "z": "000000000000000000000000000000000000001111111000001111111000000000110000000001110000000011100000000111000000000110000000001111111000001111111000"
             }
-            let threshold = 127
-            let captcha = "";                         //存放识别后的验证码
-            canvas.width = image.width;
-            canvas.height = image.height;
-            document.body.appendChild(canvas);
-            ctx.drawImage(image, 0, 0);
+            let threshold = 127 //rgb二值化边界值
+            let answer = "";
             let info = {
                 offsetWidth: 2,
                 offsetHeight: 4,
@@ -59,17 +62,22 @@ export default{
                 wordHeight: 12,
                 wordSpace: -2
             }
+
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0);//图片写入canvas
+
             for (let i = 0; i < info.wordNum; i++) {
                 let beginX = info.offsetWidth + (info.wordWidth + info.wordSpace) * i,
                     beginY = info.offsetHeight,
                     endX = info.wordWidth,
                     endY = info.wordHeight
                 //获取验证码单个字符的数据
-                let pixels = ctx.getImageData(beginX, beginY, endX, endY).data
-                //灰度字符串
-                var ldString = "";
-                for (let j = 0, length = pixels.length; j < length; j += 4) {
-                    ldString += pixels[j] > threshold ? '0' : '1';
+                let singleData = ctx.getImageData(beginX, beginY, endX, endY).data
+                //二值化字符串
+                var bString = "";
+                for (let j = 0; j < singleData.length; j += 4) {
+                    bString += singleData[j] > threshold ? '0' : '1';
                 }
                 //获取最大匹配的字符
                 let maxCommon = {
@@ -77,7 +85,7 @@ export default{
                     num: -1
                 };
                 Object.keys(arr).map(function (value) {
-                    let commons = ldString.split("").filter(function (v, index) {
+                    let commons = bString.split("").filter(function (v, index) {
                         return arr[value][index] === v
                     }).length
                     if (commons > maxCommon.num) {
@@ -87,9 +95,10 @@ export default{
                         }
                     }
                 });
-                captcha += maxCommon.key
+                answer += maxCommon.key
             }
-            this.vcode = captcha
+            this.vcode = answer
+            if (this.first_ident)this.login()
         },
         //登录
         login (){
@@ -98,7 +107,7 @@ export default{
             self.loadding_info = "正在登陆...."
             $("#my-prompt").modal("close")
             $("#login_info").modal("open")
-            this.$http.post('/kdjw/Logon.do?method=logon', {
+            this.$http.post('/Logon.do?method=logon', {
                 useDogCode: '',
                 dlfl: 0,
                 USERNAME: self.ID,
@@ -112,6 +121,7 @@ export default{
                     let tr = $(response._dom).find(".login table tr")
                     if (tr.length === 7) {
                         self.errorInfo = $(tr).find("#errorinfo").html()
+                        if (self.errorInfo.includes("验证码"))self.first_ident = false
                         $("#login_info").modal("close")
                     }
                 } else {
@@ -126,7 +136,7 @@ export default{
         //sso授权
         sso_login (){
             let self = this
-            this.$http.get('/kdjw/Logon.do?method=logonBySSO', {}).then((response) => {
+            this.$http.get('/Logon.do?method=logonBySSO', {}).then((response) => {
                 self.loadding_info = "正在获取用户信息..."
                 self.getUserInfo()
             }, (response)=> {
@@ -137,7 +147,7 @@ export default{
         //获取用户信息
         getUserInfo (){
             let self = this
-            self.$http.get("/kdjw/xszhxxAction.do", {
+            self.$http.get("/xszhxxAction.do", {
                 params: {
                     method: "addStudentPic",
                     tktime: Date.parse(new Date())

@@ -64,7 +64,7 @@ export default {
         },
         {
             path: "/course",
-            redirect: "/course/curriculum",
+            component: require("../views/course/curriculum/index.vue"),
             children: [
                 {
                     path: "curriculum",

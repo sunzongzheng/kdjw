@@ -114,7 +114,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            let url = "/kdjw/jxpjgl.do?method=savePj&tjfs=2&val="
+            let url = "/jxpjgl.do?method=savePj&tjfs=2&val="
             for (let i in _data) {
                 if (i.indexOf("radio") < 0)continue
                 url += _data[i] + "*"

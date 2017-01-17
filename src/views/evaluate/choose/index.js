@@ -20,7 +20,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            this.$http.get("/kdjw/jiaowu/jxpj/jxpjgl_queryxs.jsp").then((response)=> {
+            this.$http.get("/jiaowu/jxpj/jxpjgl_queryxs.jsp").then((response)=> {
                 self.xnxq = $(response._dom).find("#search_values select").eq(0).html()
                 self.pjpc = $(response._dom).find("#search_values select").eq(1).html()
                 self.pjkc = $(response._dom).find("#search_values select").eq(2).html()
