@@ -1,5 +1,5 @@
 import breadcrumb from 'components/breadcrumb.vue'
-import API from '../../../utils/api'
+import API from 'utils/api'
 export default{
     created() {
         let self = this

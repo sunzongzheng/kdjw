@@ -145,6 +145,7 @@ export default {
         {
             title: '教材账户',
             isValid: true,
+            hash: "/textbook_account",
             sub: [
                 {
                     title: '教材账目信息',

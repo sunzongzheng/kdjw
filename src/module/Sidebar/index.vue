@@ -10,7 +10,7 @@
 <style lang="less" src="./index.less" scoped></style>
 <script type="text/ecmascript-6">
     import sidebarItem from 'components/SidebarItem.vue'
-    import CONFIG from '../../utils/config'
+    import CONFIG from 'utils/config'
     export default{
         mounted: function () {
             this.$nextTick(function () {

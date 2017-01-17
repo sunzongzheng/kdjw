@@ -71,7 +71,7 @@ export default{
                 type: 2,
                 shadeClose: false
             })
-            this.$http.get("/xjyj.do?method=goXsyjxx").then((response)=> {
+            this.$http.get("/xjyj.do?method=goXsyjxx", {params: this.params}).then((response)=> {
                 let thead = []
                 let tbody = []
                 $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {

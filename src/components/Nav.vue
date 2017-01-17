@@ -55,7 +55,7 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import CONFIG from '../utils/config'
+    import CONFIG from 'utils/config'
     import filter from '../filters/user'
     export default{
         mounted: function () {
