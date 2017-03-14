@@ -1,4 +1,4 @@
-import breadcrumb from 'components/breadcrumb.vue'
+import appBreadcrumb from 'components/breadcrumb.vue'
 import API from 'utils/api'
 export default{
     created() {
@@ -35,7 +35,7 @@ export default{
             params: {}
         }
     },
-    components: {breadcrumb},
+    components: {appBreadcrumb},
     methods: {
         query(params){
             let self = this

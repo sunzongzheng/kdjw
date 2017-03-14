@@ -1,5 +1,6 @@
 import pagination from 'components/pagination.vue'
-import breadcrumb from 'components/breadcrumb.vue'
+import appBreadcrumb from 'components/breadcrumb.vue'
+import API from 'utils/api'
 export default{
     created() {
         this.query()
@@ -20,7 +21,7 @@ export default{
             params: {}
         }
     },
-    components: {pagination, breadcrumb},
+    components: {pagination, appBreadcrumb},
     computed: {
         show_array(){
             if (this.$store.state.isPC) {
@@ -30,37 +31,10 @@ export default{
             }
         },
         filterData(){
-            let self = this
-            let answer = {
-                thead: [],
-                tbody: []
-            }
-            let thead_map = []
-            self.thead.map(function (th, i) {
-                if ($.inArray(th, self.show_array) > -1) {
-                    answer.thead.push(th)
-                    self.tbody.map(function (tr, j) {
-                        if (typeof(answer.tbody[j]) !== "object") {
-                            answer.tbody[j] = {
-                                entry: []
-                            }
-                        }
-                        answer.tbody[j].entry.push(tr.entry[i])
-                        answer.tbody[j].type = tr.type
-                    })
-                }
+            return API.commonTb(this.thead, this.tbody, this.show_array, {
+                curPage: this.curPage,
+                pageSize: this.pageSize
             })
-            if (self.$store.state.user.cadres) {
-                //学期倒序
-                answer.tbody.sort(function (a, b) {
-                    if (a.entry[0] > b.entry[0])return -1
-                    else if (a.entry[0] == b.entry[0])return 0
-                    else return 1
-                })
-                //分页
-                answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
-            }
-            return answer
         }
     },
     methods: {

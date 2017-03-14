@@ -1,5 +1,6 @@
 import pagination from 'components/pagination.vue'
-import breadcrumb from 'components/breadcrumb.vue'
+import appBreadcrumb from 'components/breadcrumb.vue'
+import TABLE from 'filters/table'
 export default{
     created() {
         let param = JSON.parse(JSON.stringify(this.$store.state.evaluate.inquiry_param))
@@ -37,35 +38,16 @@ export default{
             pageSize: 15
         }
     },
-    components: {pagination, breadcrumb},
+    components: {pagination, appBreadcrumb},
     computed: {
         pageNum(){
             return Math.ceil(this.tbody.length / this.pageSize)
         },
         filterData(){
-            let self = this
-            let answer = {
-                thead: [],
-                tbody: []
-            }
-            let thead_map = []
-            self.thead.map(function (th, i) {
-                if ($.inArray(th, self.show_array) > -1) {
-                    answer.thead.push(th)
-                    self.tbody.map(function (tr, j) {
-                        if (typeof(answer.tbody[j]) !== "object") {
-                            answer.tbody[j] = {
-                                entry: []
-                            }
-                        }
-                        answer.tbody[j].entry.push(tr.entry[i])
-                        answer.tbody[j].type = tr.type
-                    })
-                }
+            return API.commonTb(this.thead, this.tbody, this.show_array, {
+                curPage: this.curPage,
+                pageSize: this.pageSize
             })
-            //分页
-            answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
-            return answer
         }
     },
     methods: {
@@ -77,23 +59,9 @@ export default{
                 shadeClose: false
             })
             self.$http.post("/jxpjgl.do?method=queryJxpj&type=xs", params).then((response)=> {
-                let thead = []
-                let tbody = []
-                $(response._dom).find("#tblHead tbody th").each(function (i) {
-                    let th = $(this).find("font").eq(1).html()
-                    if (typeof th !== "undefined")thead.push(th)
-                })
-                $(response._dom).find("#mxh tbody tr").each(function () {
-                    let tr = {}
-                    tr.entry = []
-                    $(this).find("td").each(function (i) {
-                        if ($(this).html().indexOf("input") > -1)return
-                        tr.entry.push($(this).html().trim().replace("&nbsp;", ""))
-                    })
-                    tbody.push(tr)
-                })
-                self.thead = thead
-                self.tbody = self.tbody.concat(tbody)
+                let tb = TABLE.noInput(response._dom, "#tblHead tbody th", "#mxh tbody tr")
+                self.thead = tb.thead
+                self.tbody = self.tbody.concat(tb.tbody)
                 layer.closeAll()
             })
         },

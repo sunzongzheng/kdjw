@@ -31,6 +31,7 @@ export default{
             })
         },
         query (){
+            let self = this
             let xnxq = $("#xnxq option:selected").val(),
                 pjpc = $("#pjpc option:selected").val(),
                 pjkc = $("#pjkc option:selected").val()
@@ -39,8 +40,9 @@ export default{
                     content: "大兄弟，你参数咋没填完就想查咧",
                     skin: "msg",
                     time: 3,
-                    style: 'margin-left:200px;'
+                    style: 'margin-left:' + (self.$store.state.sidebar_status ? '200px;' : '0;')
                 })
+                console.log(self.$store.state.isPC)
                 return
             }
             let pjkc_array = []

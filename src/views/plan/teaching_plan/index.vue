@@ -1,6 +1,5 @@
 <template>
     <div class="result-panel">
-        <breadcrumb :list="breadcrumb"></breadcrumb>
         <div id="table">
             <table class="am-table am-table-hover am-table-compact"
                    :class="{PC:$store.state.isPC}">

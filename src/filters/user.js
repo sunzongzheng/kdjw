@@ -1,7 +1,7 @@
 export default {
     getInfo (dom){
         //标题信息
-        let title_info = $($($(dom).find("table")[1]).find("tr")[1]).find("td").html().split("&nbsp;")
+        let title_info = $(dom).find("table").eq(1).find("tr").eq(1).find("td").html().split("&nbsp;")
         let title_info_array = []
         let user = {}
         for (let i in title_info) {

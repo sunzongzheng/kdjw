@@ -1,21 +1,12 @@
 import pagination from 'components/pagination.vue'
-import breadcrumb from 'components/breadcrumb.vue'
+import API from 'utils/api'
+import TABLE from 'filters/table'
 export default{
     created() {
         this.query()
     },
     data(){
         return {
-            breadcrumb: [
-                {
-                    title: "查询选择",
-                    url: "./choose"
-                },
-                {
-                    title: "查询结果",
-                    active: true
-                }
-            ],
             thead: [],
             tbody: [],
             curPage: 1,
@@ -24,7 +15,7 @@ export default{
             params: {}
         }
     },
-    components: {pagination, breadcrumb},
+    components: {pagination},
     computed: {
         show_array(){
             if (this.$store.state.user.cadres) {
@@ -46,37 +37,10 @@ export default{
             }
         },
         filterData(){
-            let self = this
-            let answer = {
-                thead: [],
-                tbody: []
-            }
-            let thead_map = []
-            self.thead.map(function (th, i) {
-                if ($.inArray(th, self.show_array) > -1) {
-                    answer.thead.push(th)
-                    self.tbody.map(function (tr, j) {
-                        if (typeof(answer.tbody[j]) !== "object") {
-                            answer.tbody[j] = {
-                                entry: []
-                            }
-                        }
-                        answer.tbody[j].entry.push(tr.entry[i])
-                        answer.tbody[j].type = tr.type
-                    })
-                }
+            return API.commonTb(this.thead, this.tbody, this.show_array, {
+                curPage: this.curPage,
+                pageSize: this.pageSize
             })
-            if (self.$store.state.user.cadres) {
-                //学期倒序
-                answer.tbody.sort(function (a, b) {
-                    if (a.entry[0] > b.entry[0])return -1
-                    else if (a.entry[0] == b.entry[0])return 0
-                    else return 1
-                })
-                //分页
-                answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
-            }
-            return answer
         }
     },
     methods: {
@@ -88,23 +52,9 @@ export default{
                 shadeClose: false
             })
             this.$http.get("/xsdPyfa.do?method=toJxjh", {params: this.params}).then((response)=> {
-                let thead = []
-                let tbody = []
-                $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {
-                    let th = $(this).find("font").eq(1).html()
-                    if (typeof th !== "undefined")thead.push(th)
-                })
-                $(response._dom).find("#mxhDiv table tbody tr").each(function () {
-                    let tr = {}
-                    tr.entry = []
-                    $(this).find("td").each(function (i) {
-                        if ($(this).html().indexOf("input") > -1)return
-                        tr.entry.push($(this).html().trim().replace("&nbsp;", ""))
-                    })
-                    tbody.push(tr)
-                })
-                self.thead = thead
-                self.tbody = tbody
+                let tb = TABLE.normal(response._dom, "#tblHead tbody th", "#mxh tbody tr")
+                self.thead = tb.thead
+                self.tbody = tb.tbody
                 //本部 前端分页
                 if (this.$store.state.user.cadres) {
                     self.pageNum = Math.ceil(self.tbody.length / self.pageSize)

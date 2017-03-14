@@ -23,7 +23,7 @@
                     this.table2 = $(response._dom).find("div table").eq(1).html()
                     this.$nextTick(()=> {
                         let str = $(".card img").attr("src").substring(5)
-                        str = this.$store.state.user.cadres ? '/kdjw' : '/xxjw' + str
+                        str = (this.$store.state.user.cadres ? '/kdjw' : '/xxjw') + str
                         $(".card img").attr("src", CONFIG.host + str)
                     })
                 })
