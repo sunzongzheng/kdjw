@@ -18,17 +18,17 @@ export default {
             children: [
                 {
                     path: "teaching_plan",
-                    component: require("views/plan/teaching_plan/index.vue")
+                    component: require("views/plan/teaching_plan.vue")
                 }
             ]
         },
         {//课程
             path: "/course",
-            component: require("views/course/curriculum/index.vue"),
+            component: require("views/course/curriculum.vue"),
             children: [
                 {
                     path: "curriculum",
-                    component: require("views/course/curriculum/index.vue")
+                    component: require("views/course/curriculum.vue")
                 }
             ]
         },
@@ -50,11 +50,11 @@ export default {
                             children: [
                                 {
                                     path: 'choose',
-                                    component: require("views/score/result_inquiry/personal/choose/index.vue"),
+                                    component: require("views/score/result_inquiry/personal/choose.vue"),
                                 },
                                 {
                                     path: 'result',
-                                    component: require("views/score/result_inquiry/personal/result/index.vue"),
+                                    component: require("views/score/result_inquiry/personal/result.vue"),
                                 }
                             ]
                         },
@@ -64,11 +64,11 @@ export default {
                             children: [
                                 {
                                     path: 'choose',
-                                    component: require("views/score/result_inquiry/average/choose/index.vue"),
+                                    component: require("views/score/result_inquiry/average/choose.vue"),
                                 },
                                 {
                                     path: 'result',
-                                    component: require("views/score/result_inquiry/average/result/index.vue"),
+                                    component: require("views/score/result_inquiry/average/result.vue"),
                                 }
                             ]
                         }
@@ -90,11 +90,11 @@ export default {
             children: [
                 {
                     path: 'arrange',
-                    component: require("views/exam/arrange/index.vue")
+                    component: require("views/exam/arrange.vue")
                 },
                 {
                     path: 'result',
-                    component: require("views/exam/result/index.vue")
+                    component: require("views/exam/result.vue")
                 }
             ]
         },
@@ -104,15 +104,15 @@ export default {
             children: [
                 {
                     path: 'choose',
-                    component: require("views/evaluate/choose/index.vue")
+                    component: require("views/evaluate/choose.vue")
                 },
                 {
                     path: 'result',
-                    component: require("views/evaluate/result/index.vue")
+                    component: require("views/evaluate/result.vue")
                 },
                 {
                     path: 'edit',
-                    component: require("views/evaluate/edit/index.vue")
+                    component: require("views/evaluate/edit.vue")
                 }
             ]
         },

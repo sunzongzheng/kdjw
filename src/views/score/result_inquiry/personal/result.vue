@@ -1,6 +1,6 @@
 <template>
     <div class="result-panel">
-        <app-breadcrumb :list="breadcrumb"></app-breadcrumb>
+        <breadcrumb :list="breadcrumb"></breadcrumb>
         <div id="table">
             <table class="am-table am-table-hover am-table-compact"
                    :class="{PC:$store.state.isPC}">
@@ -30,23 +30,32 @@
             white-space: nowrap;
         }
         th.courseName {
+            width: 16rem;
+        }
+        th.term {
             width: 10rem;
         }
     }
 </style>
 <script type="text/ecmascript-6">
     import pagination from 'components/pagination.vue'
-    import appBreadcrumb from 'components/breadcrumb.vue'
+    import breadcrumb from 'components/breadcrumb.vue'
     import API from 'utils/api'
+    import TABLE from 'filters/table'
     export default{
         created() {
+            this.params = this.$store.state.score.inquiry_param
             this.query()
         },
         data(){
             return {
                 breadcrumb: [
                     {
-                        title: "学生预警信息列表",
+                        title: "查询选择",
+                        url: "./choose"
+                    },
+                    {
+                        title: "查询结果",
                         active: true
                     }
                 ],
@@ -58,13 +67,14 @@
                 params: {}
             }
         },
-        components: {pagination, appBreadcrumb},
+        components: {pagination, breadcrumb},
         computed: {
             show_array(){
                 if (this.$store.state.isPC) {
-                    return ["预警学期", "预警名称", "预警条件", "指标值", "实际值"]
+                    return ["开课学期", "课程名称", "总成绩", "课程性质",
+                        "课程类别", "学时", "学分", "考试性质"]
                 } else {
-                    return ["预警名称", "预警条件", "指标值", "实际值"]
+                    return ["开课学期", "课程名称", "总成绩"]
                 }
             },
             filterData(){
@@ -82,21 +92,13 @@
                     type: 2,
                     shadeClose: false
                 })
-                this.$http.get("/xjyj.do?method=goXsyjxx", {params: this.params}).then((response)=> {
-                    let thead = []
-                    let tbody = []
-                    $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {
-                        let th = $(this).find("font").eq(1).html()
-                        if (typeof th !== "undefined")thead.push(th)
-                    })
-                    $(response._dom).find("#mxhDiv table tbody tr").each(function () {
-                        let tr = {}
-                        tr.entry = []
-                        $(this).find("td").each(function (i) {
-                            if ($(this).html().indexOf("input") > -1)return
-                            tr.entry.push($(this).html().trim().replace("&nbsp;", ""))
-                        })
-                        tbody.push(tr)
+                this.$http.get("/xszqcjglAction.do?method=queryxscj", {params: this.params}).then((response)=> {
+                    let thead = TABLE.filter_th(response._dom, "#tblHeadDiv table tbody th")
+                    let tbody = TABLE.filter_tr(response._dom, "#mxhDiv table tbody tr")
+                    tbody.map((tr)=> {
+                        if ($.inArray("重修", tr.entry) > -1)tr.type = "rebuilt"
+                        else tr.type = "normal"
+                        return tr
                     })
                     self.thead = thead
                     self.tbody = tbody

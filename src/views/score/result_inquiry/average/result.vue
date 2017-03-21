@@ -36,17 +36,21 @@
 </style>
 <script type="text/ecmascript-6">
     import pagination from 'components/pagination.vue'
-    import appBreadcrumb from 'components/breadcrumb.vue'
-    import API from 'utils/api'
+    import breadcrumb from 'components/breadcrumb.vue'
     export default{
         created() {
+            this.params = this.$store.state.score.inquiry_param
             this.query()
         },
         data(){
             return {
                 breadcrumb: [
                     {
-                        title: "学生预警信息列表",
+                        title: "查询选择",
+                        url: "./choose"
+                    },
+                    {
+                        title: "查询结果",
                         active: true
                     }
                 ],
@@ -58,20 +62,41 @@
                 params: {}
             }
         },
-        components: {pagination, appBreadcrumb},
+        components: {pagination, breadcrumb},
         computed: {
             show_array(){
                 if (this.$store.state.isPC) {
-                    return ["预警学期", "预警名称", "预警条件", "指标值", "实际值"]
+                    return ["课程名称", "学分", "成绩", "对应绩点", "学分绩点"]
                 } else {
-                    return ["预警名称", "预警条件", "指标值", "实际值"]
+                    return ["课程名称", "学分", "成绩", "对应绩点", "学分绩点"]
                 }
             },
             filterData(){
-                return API.commonTb(this.thead, this.tbody, this.show_array, {
-                    curPage: this.curPage,
-                    pageSize: this.pageSize
+                let self = this
+                let answer = {
+                    thead: [],
+                    tbody: []
+                }
+                let thead_map = []
+                self.thead.map(function (th, i) {
+                    if ($.inArray(th, self.show_array) > -1) {
+                        answer.thead.push(th)
+                        self.tbody.map(function (tr, j) {
+                            if (typeof(answer.tbody[j]) !== "object") {
+                                answer.tbody[j] = {
+                                    entry: []
+                                }
+                            }
+                            answer.tbody[j].entry.push(tr.entry[i])
+                            answer.tbody[j].type = tr.type
+                        })
+                    }
                 })
+                if (self.$store.state.user.cadres) {
+                    //分页
+                    answer.tbody = answer.tbody.slice((self.curPage - 1) * self.pageSize, self.curPage * self.pageSize)
+                }
+                return answer
             }
         },
         methods: {
@@ -82,7 +107,7 @@
                     type: 2,
                     shadeClose: false
                 })
-                this.$http.get("/xjyj.do?method=goXsyjxx", {params: this.params}).then((response)=> {
+                this.$http.get("/xszqcjglAction.do?method=toXfjdList", {params: this.params}).then((response)=> {
                     let thead = []
                     let tbody = []
                     $(response._dom).find("#tblHeadDiv table tbody th").each(function (i) {

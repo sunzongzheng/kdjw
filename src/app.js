@@ -7,6 +7,8 @@ import Vuex from 'vuex'
 import Amazeui from './assets/js/amazeui.min'
 import layer from './assets/js/layer'
 import CONFIG from './utils/config'
+import state from './store/state'
+import mutations from './store/mutations'
 import './assets/css/amazeui.min.css'
 import './assets/css/layer.css'
 import 'animate.css'
@@ -28,53 +30,8 @@ router.afterEach(route => {
 //状态管理
 Vue.use(Vuex)
 const store = new Vuex.Store({
-    state: {
-        user: {
-            ID: null,
-            avatar: '',
-            cadres: $.AMUI.utils.cookie.get("cadres") ? ($.AMUI.utils.cookie.get("cadres") == "true" ? true : false) : true
-        },
-        sidebar_status: $(window).width() > 767 ? true : false,
-        isPC: $(window).width() > 767 ? true : false,
-        cur_col: 'home',
-        score: {
-            inquiry_param: {}
-        },
-        exam: {
-            inquiry_param: {}
-        },
-        evaluate: {
-            inquiry_param: {}
-        },
-        public: {}
-    },
-    mutations: {
-        updateUser (state, newInfo) {
-            state.user = $.extend(state.user, newInfo)
-            $.AMUI.utils.cookie.set("cadres", state.user.cadres)
-        },
-        toggleCur_col(state, val){
-            state.cur_col = val
-        },
-        toggleDevice(state, val){
-            state.isPC = val
-        },
-        toggleSidebar(state, val){
-            state.sidebar_status = val
-        },
-        up(state, param){
-            state.public = param
-        },
-        inquiry_score (state, param){
-            state.score.inquiry_param = param
-        },
-        inquiry_exam(state, param){
-            state.exam.inquiry_param = param
-        },
-        inquiry_evaluate(state, param){
-            state.evaluate.inquiry_param = param
-        }
-    }
+    state,
+    mutations
 })
 
 //网络请求
