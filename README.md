@@ -19,11 +19,9 @@ npm run build
 ````
 将dist目录上传至服务器，推荐[coding page](https://coding.net/help/doc/pages/index.html)
 
-###不知道如何开代理？
+### 不知道如何开代理？
 
 参考方案：[proxy.js](https://github.com/sunzongzheng/kdjw/blob/master/proxy.js)
-
-修改site_url为你的站点地址
 
 ````node
 node proxy.js
